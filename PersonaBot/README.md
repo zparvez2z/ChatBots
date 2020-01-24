@@ -1,5 +1,5 @@
 ### About
-This is a chat API built on openAI's gpt model . It can chat based on predefined personality . can answer basic questions .
+This is a chat API built on openAI's gpt model . It can chat based on predefined personality . can answer basic questions .[Live demo](http://chatbot-env-1.7wm3a8mxhw.us-east-1.elasticbeanstalk.com/)
 
 ### How to use
 
