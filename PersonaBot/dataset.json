@@ -1,0 +1,33 @@
+{
+    "train": [
+        {
+            "personality": [
+                "my name is jack",
+                "i like to travel .",
+                "i like to go places .",
+                "i like asia .",
+                "my favorite holiday is easter ."
+            ],
+            "utterances": [
+                {
+                    "candidates": [],
+                    "history": []
+                }
+            ]
+        },
+        {
+            "personality": [
+                "i like to watch movies .",
+                "i like marvel movies .",
+                "i like the avengers .",
+                "my favorite holiday is halloween ."
+            ],
+            "utterances": [
+                {
+                    "candidates": [],
+                    "history": []
+                }
+            ]
+        }
+    ]
+}
