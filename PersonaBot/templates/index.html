@@ -15,70 +15,10 @@
 
 <body>
   <h3 class="text-center">Welcome!</h3>
-  <p>
-
-
-    <div class="container">
-      <div class="row">
-        <div class="col">
-
-        </div>
-        <div class="col-6">
-          url = "main_url" <br>
-          ## test <br>
-          response = requests.get(url) <br>
-          print(response.text) <br>
-          <br>
-          ##to chat <br>
-          url = url+'chat'
-          params ={'query': 'Hi'} <br>
-          response = requests.get(url, params) <br>
-          print(response.json()) <br>
-          <br>
-          ##get history <br>
-          url = url+'history' <br>
-          response = requests.get(url) <br>
-          print(response.json()) <br>
-          <br>
-
-          ##Get List of available personalities <br>
-          url = url+'persona' <br>
-          response = requests.get(url) <br>
-          print(response.json()) <br>
-          <br>
-
-          ##select personality <br>
-          url = url+'set_persona/0' <br>
-          response = requests.put(url) <br>
-          print(response.text) <br>
-          <br>
-          #Add persona <br>
-          <br>
-          url = url+'add_persona' <br>
-          data ={"persona":"descrive your personality", <br>
-                "back_story":"give a backstory for candidate", <br>
-                "history":"give predefined history" <br>
-                } <br>
-
-          headers = {'Content-type': 'application/json', 'Accept': 'text/plain'} <br>
-          response = requests.post(url, data=json.dumps(data), headers=headers) <br>
-          print(response.json()) <br>
-          <br>
-
-          ## Delete persona <br>
-          url = url+'remove_persona/1' <br>
-          response = requests.delete(url) <br>
-          print(response.json()) <br>
-
-        </div>
-        <div class="col">
-
-        </div>
-      </div>
-    </div>
-
-
-  </p>
+  <div class="embed-responsive embed-responsive-16by9">
+    <iframe class="embed-responsive-item" src="https://github.com/zparvez2z/ChatBots/blob/master/PersonaBot/README.md"
+      allowfullscreen></iframe>
+  </div>
 
 
   <!-- Optional JavaScript -->
