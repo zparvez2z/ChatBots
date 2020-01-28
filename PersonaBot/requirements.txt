@@ -1,5 +1,6 @@
 flask
 flask-restful
+flask-json-schema
 torch
 pytorch-ignite
 pytorch-transformers>=1.2

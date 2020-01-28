@@ -4,8 +4,8 @@ import requests,json,re
 url = "http://127.0.0.1:5000/"
 
 # # test
-response = requests.get(url)
-print(response.text)
+# response = requests.get(url)
+# print(response.text)
 
 # to chat
 # url = url+'chat'
@@ -59,17 +59,16 @@ print(response.text)
 
 
 # Add persona
-# url = url+'add_persona'
-# data ={"persona":"my name is andrew .i like to code . i like python .i like data science . my favorite holiday is christmas.",
-#         "back_story":" i started programming in 2015 . it is really fun and challenging. i started my programming using c.\
-#         now i code in python most of the time.",
-#         "history":"i'm great today ! i'm reading a new book on deep learning"
+url = url+'add_persona'
+data ={"persona":"my name is andrew .i like to code . i like python .i like data science . my favorite holiday is christmas.",
+        "back_story":"",
+        "history":"i'm great today ! i'm reading a new book on deep learning"
 
-#         }
+        }
         
-# headers = {'Content-type': 'application/json', 'Accept': 'text/plain'}
-# response = requests.post(url, data=json.dumps(data), headers=headers)
-# print(response.json())
+headers = {'Content-type': 'application/json', 'Accept': 'text/plain'}
+response = requests.post(url, data=json.dumps(data), headers=headers)
+print(response.json())
 
 
 #Delete persona
@@ -85,3 +84,24 @@ print(response.text)
 # for i,data in enumerate(dataset["train"]):
 #     persona["persona_id : "+str(i)]=data["personality"]
 # print(persona)
+
+
+# from jsonschema import validate
+# persona_schema = {'type':'object',
+#                     'properties':{
+#                     'persona':{ 'type': 'string' },
+#                     'back_story':{ 'type': 'string' },
+#                     'history':{ 'type': 'string' }
+#                     }
+#                 }
+
+
+# data ={"persona":"my name is andrew .i like to code . i like python .i like data science . my favorite holiday is christmas.",
+#         "back_story":" i started programming in 2015 . it is really fun and challenging. i started my programming using c.\
+#         now i code in python most of the time.",
+#         "history":"i'm great today ! i'm reading a new book on deep learning"
+
+#         }
+
+# validate(data,persona_schema)
+# print('ok')

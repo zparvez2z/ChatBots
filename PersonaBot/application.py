@@ -5,7 +5,7 @@
 from flask import Flask, request, jsonify,render_template, make_response
 from flask_restful import reqparse, abort, Api, Resource
 import json
-
+from jsonschema import validate
 import logging
 import random
 from argparse import ArgumentParser
@@ -14,10 +14,8 @@ from pprint import pformat
 import warnings
 import re
 import os
-
 import torch
 import torch.nn.functional as F
-
 from pytorch_transformers import OpenAIGPTLMHeadModel, OpenAIGPTTokenizer, GPT2LMHeadModel, GPT2Tokenizer
 from train import SPECIAL_TOKENS, build_input_from_segments, add_special_tokens_
 from utils import get_dataset, download_pretrained_model
@@ -26,11 +24,10 @@ from utils import get_dataset, download_pretrained_model
 application = Flask(__name__)
 api = Api(application)
 
+
 req_parser = reqparse.RequestParser()
 req_parser.add_argument('query')
 req_parser.add_argument('persona')
-
-
 
 
 def top_filtering(logits, top_k=0., top_p=0.9, threshold=-float('Inf'), filter_value=-float('Inf')):
@@ -150,19 +147,17 @@ logger.info("Sample a personality")
 dataset = get_dataset(tokenizer, args.dataset_path, args.dataset_cache)
 personalities = [dialog["personality"] for dataset in dataset.values() for dialog in dataset]
 logger.info("Number of personality: %d", len(personalities) )
-# personality = random.choice(personalities)
 personality = personalities[0]
 logger.info("Selected personality ID: %d", personalities.index(personality))
 logger.info("Selected personality Desc: %s", tokenizer.decode(chain(*personality)))
-
-
-
 history = []
+
 
 class Index(Resource):    
     def get(self):
         headers = {'Content-Type': 'text/html'}
         return make_response(render_template('index.html'),200,headers) 
+
 
 class Chat(Resource):    
     def get(self):
@@ -183,6 +178,7 @@ class Chat(Resource):
         logger.info("reply: %s",reply)        
         return {'input':input,'reply':reply}  
 
+
 class History(Resource):    
     def get(self):
         global history,tokenizer ,logger        
@@ -191,6 +187,7 @@ class History(Resource):
             hist.append(tokenizer.decode(item))
         logger.info("History: %s", hist)
         return {'History:':hist}
+
 
 class Persona(Resource):
     def get(self):
@@ -204,64 +201,76 @@ class Persona(Resource):
 
         return {'availabe personalities:':personas}
 
-class Add_persona(Resource):
-    #!!!Have to validate data!!!
+
+class Add_persona(Resource):    
     def post(self):
-        global logger,dataset,tokenizer, args,personalities,personality
-        # req_args = req_parser.parse_args()   
-        persona = request.json["persona"]
-        persona = re.split('\.|\?|! ',persona)
-        logger.info("persona : %s",persona)
-
-        candidates = request.json["back_story"]
-        candidates = re.split('\.|\?|! ',candidates)
-        logger.info("candidates : %s",candidates)
-
-        history = request.json["history"]
-        history = re.split('\.|\?|! ',history)
-        logger.info("history : %s",history)
-        
-        new_persona={
-            "personality": persona,
-            "utterances": [
-                {
-                    "candidates": candidates,
-                    "history": history
+        try:
+            persona_schema = {'type':'object',
+            'properties':{
+                'persona':{ 'type': 'string' },
+                'back_story':{ 'type': 'string' },
+                'history':{ 'type': 'string' }
                 }
-            ]
-        }
+            }
+            global logger,dataset,tokenizer, args,personalities,personality
+            logger.info('input: %s',request.json)
+            validate(instance = request.json,schema=persona_schema)
+            persona = request.json["persona"]
+            persona = re.split('\.|\?|! ',persona)
+            logger.info("persona : %s",persona)
 
-        logger.info("new persona : %s",new_persona)
+            candidates = request.json["back_story"]
+            candidates = re.split('\.|\?|! ',candidates)
+            logger.info("candidates : %s",candidates)
 
-        
-        with open(args.dataset_path, "r", encoding="utf-8") as f:
-            data = json.loads(f.read())
-        data["train"].append(new_persona)
+            history = request.json["history"]
+            history = re.split('\.|\?|! ',history)
+            logger.info("history : %s",history)
+            
+            new_persona={
+                "personality": persona,
+                "utterances": [
+                    {
+                        "candidates": candidates,
+                        "history": history
+                    }
+                ]
+            }
 
-        with open(args.dataset_path, "w", encoding="utf-8") as outfile:
-            json.dump(data, outfile,indent=4)
+            logger.info("new persona : %s",new_persona)
 
-        # re-initiate 
-        dataset_cache = args.dataset_cache + '_' + type(tokenizer).__name__ 
-        if os.path.isfile(dataset_cache):
-            logger.info("removing previous cache")
-            os.remove(dataset_cache)
+            
+            with open(args.dataset_path, "r", encoding="utf-8") as f:
+                data = json.loads(f.read())
+            data["train"].append(new_persona)
 
-        logger.info("Selecting your personality")
-        dataset = get_dataset(tokenizer, args.dataset_path, args.dataset_cache)
-        personalities = [dialog["personality"] for dataset in dataset.values() for dialog in dataset]
+            with open(args.dataset_path, "w", encoding="utf-8") as outfile:
+                json.dump(data, outfile,indent=4)
 
-        personality = personalities[-1]
-        persona_id = personalities.index(personality)
-        logger.info("Selected personality ID: %d", persona_id)
-        logger.info("Selected personality Desc: %s", tokenizer.decode(chain(*personality)))
+            # re-initiate 
+            dataset_cache = args.dataset_cache + '_' + type(tokenizer).__name__ 
+            if os.path.isfile(dataset_cache):
+                logger.info("removing previous cache")
+                os.remove(dataset_cache)
 
-        
-        return {'personality created':'success',
-                'persona_id':persona_id,
-                'persona input':persona , 
-                'candidates':candidates , 
-                'history':history,}
+            logger.info("Selecting your personality")
+            dataset = get_dataset(tokenizer, args.dataset_path, args.dataset_cache)
+            personalities = [dialog["personality"] for dataset in dataset.values() for dialog in dataset]
+
+            personality = personalities[-1]
+            persona_id = personalities.index(personality)
+            logger.info("Selected personality ID: %d", persona_id)
+            logger.info("Selected personality Desc: %s", tokenizer.decode(chain(*personality)))
+
+            
+            return {'personality created':'success',
+                    'persona_id':persona_id,
+                    'persona input':persona , 
+                    'candidates':candidates , 
+                    'history':history,}
+        except Exception as e:
+            return {'error':'invalid fromat'}
+
 
 class Set_persona(Resource):
     def put(self,persona_id):
@@ -278,6 +287,7 @@ class Set_persona(Resource):
         logger.info("Selected personality ID: %d", personalities.index(personality))
         logger.info("Selected personality: %s", persona_desc)
         return {'Selected personality':persona_desc}
+
 
 class Remove_persona(Resource):
     def delete(self, persona_id):
@@ -323,7 +333,6 @@ class Remove_persona(Resource):
                 'availabe personas':personas}
 
 
-
 api.add_resource(Index , '/')
 api.add_resource(Chat , '/chat')
 api.add_resource(History , '/history')
@@ -332,7 +341,6 @@ api.add_resource(Add_persona,'/add_persona')
 api.add_resource(Set_persona,'/set_persona/<int:persona_id>')
 api.add_resource(Remove_persona,'/remove_persona/<int:persona_id>')
 
-if __name__ == "__main__":
-    
+if __name__ == "__main__":    
     application.run(debug=True)
 
