@@ -1,8 +1,8 @@
 flask
 flask-restful
-flask-json-schema
+jsonschema
 torch
 pytorch-ignite
 pytorch-transformers>=1.2
 tensorboardX==1.8
-tensorflow  # for tensorboardX
+      # for tensorboardX
