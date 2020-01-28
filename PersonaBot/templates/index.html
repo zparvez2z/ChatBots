@@ -14,14 +14,54 @@
 </head>
 
 <body>
-  <div class="container-fluid">
-    <h3 class="text-center">Welcome!</h3>
-    <pre><code></code></pre>
-
-    <h5 class="text-center"> Go to this <a href="https://github.com/zparvez2z/ChatBots/tree/master/PersonaBot"
-        class="badge badge-info" target="_blank">page</a> for more</h5>
-
+  <div class="container-fluid ">
+    <div class="row">
+      <div class="col col-lg-2">
+        </div>
+          <div class="col-md-auto">
+            <h1 class="text-center">Welcome!</h1>
+            <p>You can use <strong>curl</strong> to test this API</p>
+            <h4>To get this page</h4>
+            <pre><code> curl http://chat-bot-url/</code></pre>
+            <h4>To Chat</h4>
+            <pre><code> curl http://chat-bot-url/chat?query=hi </code></pre>
+            <h4>To Chat</h4>
+            <pre><code> curl http://chat-bot-url/chat?query=hi </code></pre>
+            <h4>To get Chat History</h4>
+            <pre><code> curl http://chat-bot-url/history </code></pre>
+            <h4>To get list of available persona</h4>
+            <pre><code> curl http://chat-bot-url/persona </code></pre>
+            <h4>Set a Persona</h4>
+            <p>To set a persona to chat with use PUT request like below</p>
+            <pre><code> curl http://chat-bot-url/set_persona/&lt;int:persona_id&gt; -X PUT -v </code></pre>
+            <p>i.e :
+              <pre><code> curl http://chat-bot-url/set_persona/1 -X PUT -v </code></pre>
+            </p>
+            <h4>Create Persona</h4>
+            <p>To create a persona first create a json file like below </p>
+            <pre><code>                  
+                  {"persona":"my name is andrew .i like to code . i like python .i like data science . my favorite holiday is christmas.",
+                  "back_story":" i started programming in 2015 . it is really fun and challenging. i started my programming using c.\
+                                  now i code in python most of the time.",
+                  "history":"i'm great today ! i'm reading a new book on deep learning"      
+                  }            
+                </code></pre>
+            <p>then send POST request like below </p>
+            <pre><code> curl  -d @data.json -H "Content-Type: application/json" http://chat-bot-url/add_persona -X POST -v </code></pre>
+            <h4>Delete Persona</h4>
+            <p>To delete a persona use DELETE request like below</p>
+            <pre><code> curl http://chat-bot-url/remove_persona/&lt;int:persona_id&gt; -X DELETE -v </code></pre>
+            <p>i.e :
+              <pre><code> curl http://chat-bot-url/remove_persona/1 -X DELETE -v </code></pre>
+            </p>
+            <p class="text-center"> Go to this <a href="https://github.com/zparvez2z/ChatBots/tree/master/PersonaBot"
+              class="badge badge-info" target="_blank">page</a> for more</p>
+          </div>
+        <div class="col col-lg-2">
+        </div>
+    </div>
   </div>
+
 
 
   <!-- Optional JavaScript -->
