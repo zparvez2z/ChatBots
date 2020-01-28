@@ -59,16 +59,16 @@ url = "http://127.0.0.1:5000/"
 
 
 # Add persona
-url = url+'add_persona'
-data ={"persona":"my name is andrew .i like to code . i like python .i like data science . my favorite holiday is christmas.",
-        "back_story":"",
-        "history":"i'm great today ! i'm reading a new book on deep learning"
+# url = url+'add_persona'
+# data ={"persona":"my name is andrew .i like to code . i like python .i like data science . my favorite holiday is christmas.",
+#         "back_story":"",
+#         "history":"i'm great today ! i'm reading a new book on deep learning"
 
-        }
+#         }
         
-headers = {'Content-type': 'application/json', 'Accept': 'text/plain'}
-response = requests.post(url, data=json.dumps(data), headers=headers)
-print(response.json())
+# headers = {'Content-type': 'application/json', 'Accept': 'text/plain'}
+# response = requests.post(url, data=json.dumps(data), headers=headers)
+# print(response.json())
 
 
 #Delete persona
@@ -105,3 +105,11 @@ print(response.json())
 
 # validate(data,persona_schema)
 # print('ok')
+
+# curl http://localhost:5000/chat?query=hi -v
+# curl http://localhost:5000/history -v
+# curl http://localhost:5000/persona -v
+# curl http://localhost:5000/set_persona/<int:persona_id> -X PUT -v
+# curl  -d @data.json -H "Content-Type: application/json" http://localhost:5000/add_persona -X POST -v
+# curl http://localhost:5000/remove_persona/<int:persona_id> -X DELETE -v
+# curl http://localhost:5000/remove_persona/2 -X DELETE -v
