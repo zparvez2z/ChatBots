@@ -10,7 +10,7 @@ sudo /opt/python/run/venv/bin/pip --no-cache-dir install torch
 sudo /opt/python/run/venv/bin/pip --no-cache-dir install pytorch-ignite
 sudo /opt/python/run/venv/bin/pip --no-cache-dir install pytorch-transformers==1.2
 sudo /opt/python/run/venv/bin/pip --no-cache-dir install tensorboardX==1.8
-sudo /opt/python/run/venv/bin/pip --no-cache-dir install tensorflow==1.5
+sudo /opt/python/run/venv/bin/pip --no-cache-dir install tensorflow
 deactivate
 echo "env de-activated"
 sudo mkdir /home/wsgi
