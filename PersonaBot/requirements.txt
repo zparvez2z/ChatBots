@@ -5,4 +5,4 @@ torch
 pytorch-ignite
 pytorch-transformers>=1.2
 tensorboardX==1.8
-      # for tensorboardX
+tensorflow==1.5
