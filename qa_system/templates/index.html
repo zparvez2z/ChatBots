@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta charset="utf-8">
+  <title>BotUI - Hello World</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/botui/build/botui.min.css" />
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/botui/build/botui-theme-default.css" />
+</head>
+
+<body>
+  <div class="botui-app-container" id="hello-world">
+    <bot-ui></bot-ui>
+  </div>
+  <button onclick="contChat()">ask again</button>
+  <script src="https://cdn.jsdelivr.net/vue/latest/vue.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/botui/build/botui.js"></script>
+  <script>
+    var botui = new BotUI('hello-world');
+
+    function httpGet(theUrl) {
+      var xmlHttp = new XMLHttpRequest();
+      xmlHttp.open("GET", theUrl, false); // false for synchronous request
+      xmlHttp.send(null);
+      return xmlHttp.responseText;
+    }
+
+    function contChat() {
+      botui.action.text({
+        action: {
+          placeholder: 'Enter your text here'
+        }
+      }).then(function (res) {
+
+        botui.message.add({
+
+          loading: true
+
+        }).then(function (index) {
+          var reply = JSON.parse(httpGet(window.location.href + 'chat?query=' + res.value));
+          console.log(reply.reply);
+
+          botui.message.update(index, {
+
+            loading: false,
+            content: reply.reply.toString()
+
+          });
+        });
+      });
+
+    }
+
+    botui.message.add({
+      content: 'Hello there ! ask a question , I will try to answer.'
+    }).then(contChat())
+
+
+  </script>
+</body>
+
+</html>
