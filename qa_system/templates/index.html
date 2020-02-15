@@ -3,58 +3,63 @@
 
 <head>
   <meta charset="utf-8">
-  <title>BotUI - Hello World</title>
+  <title>Test Bot</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/botui/build/botui.min.css" />
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/botui/build/botui-theme-default.css" />
 </head>
 
 <body>
-  <div class="botui-app-container" id="hello-world">
+  <div class="botui-app-container" id="test-bot">
     <bot-ui></bot-ui>
   </div>
-  <button onclick="contChat()">ask again</button>
   <script src="https://cdn.jsdelivr.net/vue/latest/vue.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/botui/build/botui.js"></script>
   <script>
-    var botui = new BotUI('hello-world');
+    var reply, loadingMsgIndex, botui = new BotUI('test-bot');
 
-    function httpGet(theUrl) {
-      var xmlHttp = new XMLHttpRequest();
-      xmlHttp.open("GET", theUrl, false); // false for synchronous request
-      xmlHttp.send(null);
-      return xmlHttp.responseText;
+    function httpGet(theUrl, cb) {
+      var xhr = new XMLHttpRequest();
+      var self = this;
+      xhr.open('GET', theUrl);
+      xhr.onload = function () {
+        var res = JSON.parse(xhr.responseText)
+        cb(res);
+      }
+      xhr.send();
     }
 
     function contChat() {
       botui.action.text({
         action: {
-          placeholder: 'Enter your text here'
+          delay: 1000,
+          placeholder: 'enter text here'
         }
       }).then(function (res) {
-
-        botui.message.add({
-
+        loadingMsgIndex = botui.message.bot({
+          delay: 200,
           loading: true
-
         }).then(function (index) {
-          var reply = JSON.parse(httpGet(window.location.href + 'chat?query=' + res.value));
-          console.log(reply.reply);
-
-          botui.message.update(index, {
-
-            loading: false,
-            content: reply.reply.toString()
-
-          });
+          loadingMsgIndex = index;
+          url = window.location.href + 'chat?query=' + res.value;
+          httpGet(url, showReply);
         });
       });
-
     }
 
-    botui.message.add({
-      content: 'Hello there ! ask a question , I will try to answer.'
-    }).then(contChat())
+    function showReply(reply) {
+      console.log(reply.reply);
+      botui.message
+        .update(loadingMsgIndex, {
+          content: reply.reply.toString()
+        }).then(contChat);
+    }
+
+
+    botui.message.bot({
+      delay: 1000,
+      content: 'Hello there ! How can I help you ?'
+    }).then(contChat)
 
 
   </script>

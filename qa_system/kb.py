@@ -1,6 +1,4 @@
-KB = " i am brac virtual assistant . ask a question , I will try to answer.\
-        \
-        brac, is an international development organisation based in Bangladesh, In order to \
+KB = "  Brac, is an international development organisation based in Bangladesh, In order to \
         receive foreign donations, BRAC was subsequently registered under the NGO Affairs Bureau of \
         the Government of Bangladesh. BRAC is the largest non-governmental development organisation \
         in the world, in terms of number of employees as of September 2016. Established by Sir Fazle\
