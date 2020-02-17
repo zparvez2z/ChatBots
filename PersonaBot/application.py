@@ -147,7 +147,7 @@ logger.info("Sample a personality")
 dataset = get_dataset(tokenizer, args.dataset_path, args.dataset_cache)
 personalities = [dialog["personality"] for dataset in dataset.values() for dialog in dataset]
 logger.info("Number of personality: %d", len(personalities) )
-personality = personalities[0]
+personality = personalities[2]
 logger.info("Selected personality ID: %d", personalities.index(personality))
 logger.info("Selected personality Desc: %s", tokenizer.decode(chain(*personality)))
 history = []
