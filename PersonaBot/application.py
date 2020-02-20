@@ -147,7 +147,7 @@ logger.info("Sample a personality")
 dataset = get_dataset(tokenizer, args.dataset_path, args.dataset_cache)
 personalities = [dialog["personality"] for dataset in dataset.values() for dialog in dataset]
 logger.info("Number of personality: %d", len(personalities) )
-personality = personalities[0]
+personality = personalities[2]
 logger.info("Selected personality ID: %d", personalities.index(personality))
 logger.info("Selected personality Desc: %s", tokenizer.decode(chain(*personality)))
 history = []
@@ -332,6 +332,9 @@ class Remove_persona(Resource):
                 'status':'deleted',
                 'availabe personas':personas}
 
+class Status(Resource):
+    def get(self):
+        return "running"
 
 api.add_resource(Index , '/')
 api.add_resource(Chat , '/chat')
@@ -340,6 +343,7 @@ api.add_resource(Persona, '/persona')
 api.add_resource(Add_persona,'/add_persona')
 api.add_resource(Set_persona,'/set_persona/<int:persona_id>')
 api.add_resource(Remove_persona,'/remove_persona/<int:persona_id>')
+api.add_resource(Status,'/status')
 
 if __name__ == "__main__":    
     application.run(debug=True)
